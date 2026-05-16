@@ -1,0 +1,245 @@
+{
+  "name": "Project 02 AI Lead Classifier",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3faf21e3-d03d-4e5c-b150-799ee694861d",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0952b6c6-d597-4893-84c2-0f57baff6151",
+              "name": "Name",
+              "value": "John Doe",
+              "type": "string"
+            },
+            {
+              "id": "d9fe8b42-bb38-4c03-9cbe-7fca1ee7d350",
+              "name": "Message",
+              "value": "Hi, I run a digital marketing agency in London. We are currently overwhelmed with manual data entry from our website forms. We need an automation solution using n8n urgently. Our budget is around $2000.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "4dadb73b-1a66-4e1d-9ad7-2674a62f8725",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3.1-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3.1-flash-lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Analyze the following customer message. \n1. Provide a concise 1-sentence summary of what they need (Output as: summary).\n2. Determine the priority level based on urgency and budget. Choose ONLY one option: \"High\", \"Medium\", or \"Low\" (Output as: priority).\n\nCustomer Message: {{ $json.Message }}\n\nRespond ONLY in valid, raw JSON format like this, without markdown formatting blocks:\n{\n  \"summary\": \"The user wants...\",\n  \"priority\": \"High\"\n}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "4a5b65da-ec0e-4fb3-bb51-46093bf986a5",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3JnnlIfo8dRSYkb4",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawText = $input.first().json.content.parts[0].text;\nreturn JSON.parse(rawText);"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        768,
+        0
+      ],
+      "id": "abb1d41b-ef42-478a-bde9-d4ea894706b9",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1iANvLm_txKwff6UajvFqPTxA452rxHzktIIohs732Yc",
+          "mode": "list",
+          "cachedResultName": "AI Lead Classifier (n8n Project)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iANvLm_txKwff6UajvFqPTxA452rxHzktIIohs732Yc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iANvLm_txKwff6UajvFqPTxA452rxHzktIIohs732Yc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $now }}",
+            "Customer Name": "={{ $('Edit Fields').item.json.Name }}",
+            "Inquiry / Message": "={{ $('Edit Fields').item.json.Message }}",
+            "AI Summary": "={{ $json.summary }}",
+            "Priority Level": "={{ $json.priority }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Customer Name",
+              "displayName": "Customer Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Inquiry / Message",
+              "displayName": "Inquiry / Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Summary",
+              "displayName": "AI Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Priority Level",
+              "displayName": "Priority Level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        0
+      ],
+      "id": "44361a41-2049-40c2-9b3c-d34862f909a3",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YqwNGKOC0rj3LXuA",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ad22cfed-ca80-4a08-a8a7-638428ccf03f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed33fe8c45ccc0e0f4da828ab72ce8488d177ea4ec1d8fcad32b14770160c788"
+  },
+  "id": "rkFlfonn8C87DuQZ",
+  "tags": []
+}
