@@ -1,0 +1,65 @@
+{
+  "name": "System Error Handler to Telegram",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9b23fbe6-3fde-411d-90a2-8caa91dbbd5b",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "6304207206",
+        "message": "=🚨 ALERT: SISTEM AUTOMATION ERROR! 🚨\n\n🛑 Masalah Terdeteksi: \n\"{{ $json.error.message }}\"\n\n📋 Detail Log:\n• Nama Workflow: {{ $json.workflow.name }}\n• ID Workflow: {{ $json.workflow.id }}\n• ID Eksekusi: {{ $json.execution.id }}\n\n⚠️ Segera cek n8n dashboard Anda untuk perbaikan!",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "b6af011c-740a-41ea-8258-f622c278f362",
+      "name": "Send message and wait for response",
+      "webhookId": "fd84b812-fe15-404a-8528-5ae41ae42a7b",
+      "credentials": {
+        "telegramApi": {
+          "id": "EfpDNczuuqpNgbm7",
+          "name": "Dana Guard Bot"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9bf899eb-598b-4d7d-9331-92cc698a4b62",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed33fe8c45ccc0e0f4da828ab72ce8488d177ea4ec1d8fcad32b14770160c788"
+  },
+  "id": "waGktut9H4nzEQcq",
+  "tags": []
+}
