@@ -1,0 +1,211 @@
+{
+  "name": "Project 03: Live Webhook to Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3.1-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3.1-flash-lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Analyze the following customer message. \n1. Provide a concise 1-sentence summary of what they need (Output as: summary).\n2. Determine the priority level based on urgency and budget. Choose ONLY one option: \"High\", \"Medium\", or \"Low\" (Output as: priority).\n\nCustomer Message: {{ $json.body.Message }}\n\nRespond ONLY in valid, raw JSON format like this, without markdown formatting blocks:\n{\n  \"summary\": \"The user wants...\",\n  \"priority\": \"High\"\n}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        192,
+        224
+      ],
+      "id": "a7b272d3-b457-42d0-936d-007838f52879",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3JnnlIfo8dRSYkb4",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawText = $input.first().json.content.parts[0].text;\nreturn JSON.parse(rawText);"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        544,
+        224
+      ],
+      "id": "6733dcc4-4c90-4b8e-b2cf-75356f5bd7b1",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1iANvLm_txKwff6UajvFqPTxA452rxHzktIIohs732Yc",
+          "mode": "list",
+          "cachedResultName": "AI Lead Classifier (n8n Project)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iANvLm_txKwff6UajvFqPTxA452rxHzktIIohs732Yc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iANvLm_txKwff6UajvFqPTxA452rxHzktIIohs732Yc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Customer Name": "={{ $('Webhook').item.json.body.Name }}",
+            "Timestamp": "={{ $now }}",
+            "Inquiry / Message": "={{ $('Webhook').item.json.body.Message }}",
+            "AI Summary": "={{ $json.summary }}",
+            "Priority Level": "={{ $json.priority }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Customer Name",
+              "displayName": "Customer Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Inquiry / Message",
+              "displayName": "Inquiry / Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Summary",
+              "displayName": "AI Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Priority Level",
+              "displayName": "Priority Level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        768,
+        224
+      ],
+      "id": "f5a00520-abe9-4011-8134-8b358573f4fa",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YqwNGKOC0rj3LXuA",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "24a07fe2-bcf9-4089-a776-c0a609beeea4",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        224
+      ],
+      "id": "8110b234-70f8-4d61-9ae2-88074e3a4974",
+      "name": "Webhook",
+      "webhookId": "24a07fe2-bcf9-4089-a776-c0a609beeea4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c5abbd42-5dfd-4dac-b837-6bb55d0940c0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed33fe8c45ccc0e0f4da828ab72ce8488d177ea4ec1d8fcad32b14770160c788"
+  },
+  "id": "Gvcy8agi1lpmPFbj",
+  "tags": []
+}
