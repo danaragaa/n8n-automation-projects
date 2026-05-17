@@ -1,0 +1,154 @@
+{
+  "name": "Project 05: Automated CRM & Sales Auto-Reply",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-lead",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        -16
+      ],
+      "id": "e32ee036-4083-4c60-8409-798a06f266e4",
+      "name": "Webhook",
+      "webhookId": "9221e1b1-b22c-466c-9861-0901d1360b7f"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "email": "={{ $json.body.email }}",
+        "additionalFields": {
+          "firstName": "={{ $json.body.first_name }}",
+          "jobTitle": "={{ $json.body.job_title }}",
+          "lastName": "={{ $json.body.last_name }}"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        -16
+      ],
+      "id": "0e3de8d4-d462-4545-9d62-cbae898665ce",
+      "name": "Create or update a contact",
+      "credentials": {
+        "hubspotOAuth2Api": {
+          "id": "4bFqYhRLhroxsBjO",
+          "name": "HubSpot OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "6304207206",
+        "text": "={{ JSON.parse($json.content.parts[0].text).telegram_alert }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        768,
+        -16
+      ],
+      "id": "e9767d4a-de88-418e-862c-4f3b1a39c7e9",
+      "name": "Send a text message",
+      "webhookId": "056677b5-4b9d-4862-aba1-259a6c7e3762",
+      "credentials": {
+        "telegramApi": {
+          "id": "JASKHUUtrPy7nlPt",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "models/gemini-3-flash-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an elite Enterprise Sales Assistant. Analyze the incoming lead from our website form and perform two tasks.\n\nIncoming Lead Data:\n- Name: {{ $node[\"Webhook\"].json.body.first_name }} {{ $node[\"Webhook\"].json.body.last_name }}\n- Company: {{ $node[\"Webhook\"].json.body.company_name }}\n- Job Title: {{ $node[\"Webhook\"].json.body.job_title }}\n- Budget: {{ $node[\"Webhook\"].json.body.estimated_budget }}\n- Inquiry Details: \"{{ $node[\"Webhook\"].json.body.inquiry_details }}\"\n\nYour Tasks:\n1. Create a beautifully structured, clean, and professional Slack/Telegram executive alert message in Indonesian. Use professional formatting, emojis, and clear spacing.\n2. Draft a premium, highly persuasive B2B inbound sales response email in English addressed to the client. The tone should be consultative, professional, and invite them to a discovery call. Do not include subject lines or placeholders like [Your Name].\n\nYou MUST respond strictly in a valid JSON format with exactly two keys: \"telegram_alert\" and \"email_draft\". Do not include any markdown wrapper like ```json.\n\nExample structure:\n{\n  \"telegram_alert\": \"text here...\",\n  \"email_draft\": \"text here...\"\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        -16
+      ],
+      "id": "29206100-8211-49d5-b799-5623e6a8ff9a",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3JnnlIfo8dRSYkb4",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Create or update a contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or update a contact": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        []
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6ec41ad6-0620-4fc3-b473-05f8cd8c5ab2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed33fe8c45ccc0e0f4da828ab72ce8488d177ea4ec1d8fcad32b14770160c788"
+  },
+  "id": "yW34a84y5xpzATEX",
+  "tags": []
+}
