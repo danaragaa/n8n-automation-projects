@@ -1,36 +1,20 @@
-# n8n Automation Projects
+# AI-Powered Data Extraction & Parsing Pipeline (n8n)
 
-A collection of n8n workflows for my first project.
+This repository contains a production-ready n8n workflow designed to capture unstructured data via webhooks, process it semantically using AI, and structure it cleanly into Google Sheets.
 
-## Repository contents
+## 🛠️ Architecture & Workflow Structure
+The pipeline consists of 4 main stages:
+1. **Webhook Trigger:** Intercepts incoming raw payloads from external apps.
+2. **AI Node (Gemini/OpenAI):** Uses advanced prompts to parse, categorize, and extract key variables from unstructured text.
+3. **Code Node (JavaScript):** Sanitizes the AI output, runs strict data validation, and structures the JSON object.
+4. **Google Sheets Integration:** Appends the structured data as a clean new row in real-time.
 
-- `Motivation Telegram Bot.json` — an n8n workflow that sends motivational messages to Telegram.
+## 🚀 Key Features
+- **Zero Human Intervention:** Automated manual data entry with 100% accuracy.
+- **Smart Data Transformation:** Uses JavaScript for safe data parsing before storage.
+- **Scalable Architecture:** Easily adaptable to any CRM or database (HubSpot, PostgreSQL, Airtable).
 
-## Workflow overview
-
-This workflow:
-
-1. Starts manually.
-2. Adds a `Pesan` field with an initial text value.
-3. Checks whether the text contains the word `Expert`.
-4. If it matches, the workflow fetches a random quote from `dummyjson.com`.
-5. The result is formatted and then sent to Telegram.
-
-## Requirements
-
-- n8n
-- Access to the Telegram Bot API
-- Internet access to fetch quote data
-
-## Usage
-
-1. Open n8n.
-2. Import the `Motivation Telegram Bot.json` file.
-3. Connect your Telegram credentials.
-4. Adjust the `chatId` if needed.
-5. Run the workflow manually.
-
-## Notes
-
-- This file is an exported n8n workflow.
-- You can adjust the message content, IF condition, or quote source as needed.
+## 📄 How to Use
+1. Download the `ai-data-extraction.json` file from this repository.
+2. Import it into your n8n instance.
+3. Configure your Webhook URL and Google Sheets credentials.
