@@ -1,20 +1,37 @@
-# AI-Powered Data Extraction & Parsing Pipeline (n8n)
+# Production-Grade n8n Automation Workflows
 
-This repository contains a production-ready n8n workflow designed to capture unstructured data via webhooks, process it semantically using AI, and structure it cleanly into Google Sheets.
+Welcome to my central repository for enterprise-grade workflow automations, API integrations, and AI-driven business solutions built using n8n. 
 
-## 🛠️ Architecture & Workflow Structure
-The pipeline consists of 4 main stages:
-1. **Webhook Trigger:** Intercepts incoming raw payloads from external apps.
-2. **AI Node (Gemini/OpenAI):** Uses advanced prompts to parse, categorize, and extract key variables from unstructured text.
-3. **Code Node (JavaScript):** Sanitizes the AI output, runs strict data validation, and structures the JSON object.
-4. **Google Sheets Integration:** Appends the structured data as a clean new row in real-time.
+This repository serves as a live portfolio showcasing how I eliminate manual tasks, connect fragmented software ecosystems, and orchestrate intelligent data pipelines to scale business operations seamlessly.
 
-## 🚀 Key Features
-- **Zero Human Intervention:** Automated manual data entry with 100% accuracy.
-- **Smart Data Transformation:** Uses JavaScript for safe data parsing before storage.
-- **Scalable Architecture:** Easily adaptable to any CRM or database (HubSpot, PostgreSQL, Airtable).
+---
 
-## 📄 How to Use
-1. Download the `ai-data-extraction.json` file from this repository.
-2. Import it into your n8n instance.
-3. Configure your Webhook URL and Google Sheets credentials.
+## 🚀 Core Capabilities Illustrated Here
+
+- **AI & LLM Orchestration:** Embedding smart reasoning (OpenAI, Gemini) into daily workflows for semantic data processing.
+- **Data Synchronization & ETL:** Building reliable pipelines between Webhooks, REST APIs, CRMs, and Cloud Databases.
+- **Custom Logic & Transformation:** Utilizing strict JavaScript/TypeScript blocks within n8n to clean, validate, and parse complex JSON payloads before database ingestion.
+- **Error Handling & Resilience:** Designing robust systems with data fallback options, conditional routing, and real-time error logging.
+
+---
+
+## 📁 Featured Projects
+
+### 🛠️ Project 1: AI-Powered Semantic Data Extraction Pipeline
+* **File:** `ai-data-extraction.json`
+* **Problem Solved:** Businesses waste hundreds of hours manually sorting and entering unstructured lead data or invoices into spreadsheets.
+* **The Solution:** A 4-stage pipeline that captures incoming raw payloads via **Webhooks**, routes the data to **Gemini AI** for automated classification and semantic extraction, cleans the fields using custom **JavaScript**, and appends a structured row into **Google Sheets** in real-time.
+
+*(Note: More automation workflows for CRM syncing and database management will be added periodically.)*
+
+---
+
+## 💻 How to Implement These Workflows
+
+1. Download any `.json` file from the root of this repository.
+2. Open your n8n instance (Cloud or Self-Hosted).
+3. Click on the top-right menu and select **Import from File**.
+4. Configure your specific API credentials (e.g., Google OAuth, AI API Keys) inside the designated nodes.
+5. Toggle the workflow to **Active**.
+
+---
